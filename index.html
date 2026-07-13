@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owl Watch — Forensic Procurement Intelligence (Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0A0D12; --bg-1:#12161D; --bg-2:#171C24; --bg-3:#1D232D;
+    --line:#232936; --line-strong:#323B4A;
+    --tx-1:#E9ECF1; --tx-2:#8B93A3; --tx-3:#5B6373;
+    --amber:#F0B429; --amber-dim:#3A2E11;
+    --red:#E5484D; --red-dim:#301316;
+    --orange:#E8823D; --orange-dim:#331E0C;
+    --yellow:#E0C341; --yellow-dim:#332C0E;
+    --green:#3DAE7D; --green-dim:#0F2A20;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg-0); color:var(--tx-1);
+    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px 80px;}
+  .display{font-family:'Space Grotesk',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  header{
+    border-bottom:1px solid var(--line); padding:36px 0 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+    flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:18px;}
+  .brand h1{font-size:26px; font-weight:700; letter-spacing:0.5px; margin:0;}
+  .brand p{margin:4px 0 0; color:var(--tx-2); font-size:13px; letter-spacing:0.3px;}
+  .tagline-row{display:flex; align-items:center; gap:10px;}
+  .demo-pill{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.5px;
+    color:var(--amber); background:var(--amber-dim); border:1px solid #4a3a15;
+    padding:3px 9px; border-radius:20px; text-transform:uppercase;
+  }
+  .eye{width:56px; height:56px; flex-shrink:0;}
+
+  nav.meta{display:flex; gap:22px; align-items:center; font-size:13px; color:var(--tx-2);}
+  nav.meta a{color:var(--tx-1); text-decoration:none; border-bottom:1px solid var(--line-strong); padding-bottom:2px;}
+  nav.meta a:hover{color:var(--amber); border-color:var(--amber);}
+
+  section{margin-top:44px;}
+  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px;}
+  .section-head h2{font-size:15px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:var(--tx-1); margin:0;}
+  .section-head span{font-size:12px; color:var(--tx-3);}
+
+  .kpi-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .kpi{background:var(--bg-1); padding:18px 18px 16px;}
+  .kpi .label{font-size:11px; letter-spacing:0.4px; text-transform:uppercase; color:var(--tx-3); margin-bottom:10px;}
+  .kpi .value{font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600;}
+  .kpi .value.amber{color:var(--amber);}
+  .kpi .value.red{color:var(--red);}
+
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{
+    text-align:left; font-size:10.5px; letter-spacing:0.5px; text-transform:uppercase;
+    color:var(--tx-3); font-weight:500; padding:0 12px 10px; border-bottom:1px solid var(--line-strong);
+  }
+  tbody td{padding:11px 12px; border-bottom:1px solid var(--line); color:var(--tx-1);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--bg-1);}
+  td.num, th.num{font-family:'IBM Plex Mono',monospace; text-align:right;}
+  .panel{background:var(--bg-1); border:1px solid var(--line); border-radius:10px; padding:8px 4px 6px; overflow-x:auto;}
+
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.3px; padding:3px 8px; border-radius:5px; white-space:nowrap;}
+  .tag.critical{color:var(--red); background:var(--red-dim); border:1px solid #5a2226;}
+  .tag.high{color:var(--orange); background:var(--orange-dim); border:1px solid #5a3a1c;}
+  .tag.watchlist{color:var(--yellow); background:var(--yellow-dim); border:1px solid #5a4e1c;}
+  .tag.compliant{color:var(--green); background:var(--green-dim); border:1px solid #1e5c42;}
+
+  .two-col{display:grid; grid-template-columns:1.15fr 1fr; gap:20px;}
+  @media (max-width:900px){.two-col{grid-template-columns:1fr;}}
+
+  .commodity-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:10px;}
+  .commodity{background:var(--bg-1); border:1px solid var(--line); border-radius:8px; padding:14px 16px;}
+  .commodity .name{font-size:12.5px; color:var(--tx-2); margin-bottom:6px;}
+  .commodity .price{font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:600;}
+  .commodity .delta{font-family:'IBM Plex Mono',monospace; font-size:11.5px; margin-top:6px;}
+  .delta.up{color:var(--orange);}
+  .delta.down{color:var(--green);}
+  .delta.flat{color:var(--tx-3);}
+
+  footer{margin-top:60px; border-top:1px solid var(--line); padding-top:22px; color:var(--tx-3); font-size:12.5px; line-height:1.7;}
+  footer a{color:var(--amber); text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  ::-webkit-scrollbar{height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <svg class="eye" viewBox="0 0 100 100" role="img" aria-label="Owl Watch radar eye mark">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#232936" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#F0B429" stroke-width="1.5" stroke-dasharray="6 10" opacity="0.5">
+          <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="14s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="50" cy="50" r="30" fill="#12161D" stroke="#323B4A" stroke-width="1"/>
+        <g>
+          <path d="M50 50 L50 22 A28 28 0 0 1 74 36 Z" fill="#F0B429" opacity="0.16">
+            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite"/>
+          </path>
+          <circle cx="50" cy="50" r="9" fill="#0A0D12" stroke="#F0B429" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="3.2" fill="#F0B429"/>
+        </g>
+      </svg>
+      <div>
+        <div class="tagline-row"><h1 class="display">OWL WATCH</h1><span class="demo-pill">demo · synthetic data</span></div>
+        <p>Forensic Procurement Intelligence &nbsp;·&nbsp; CFO Command View</p>
+      </div>
+    </div>
+    <nav class="meta">
+      <span>Built by Pedro B. &nbsp;·&nbsp; Supply Chain &amp; Procurement</span>
+      <a href="#footnote">About this demo</a>
+    </nav>
+  </header>
+
+  <section>
+    <div class="section-head"><h2>Key performance indicators</h2><span>Live-linked from audit sheets (Excel engine) — mirrored here with sample data</span></div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <section class="two-col">
+    <div>
+      <div class="section-head"><h2>Vendor risk snapshot</h2><span>Top flagged vendors</span></div>
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th>Vendor</th><th class="num">Spend ($)</th><th class="num">Var. events</th>
+            <th class="num">Avg drift</th><th class="num">Failures</th><th>Tier</th>
+          </tr></thead>
+          <tbody id="vendorBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="section-head"><h2>Freight lane intelligence</h2><span>Top overcharge lanes</span></div>
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th>Lane</th><th class="num">$/mile</th><th class="num">Overcharge</th><th>Risk</th>
+          </tr></thead>
+          <tbody id="laneBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>BOM drift exposure</h2><span>Material cost vs. contract benchmark, per unit</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr>
+          <th>Material</th><th>Vendor</th><th class="num">Delivered ($/unit)</th>
+          <th class="num">Contract bmk ($/unit)</th><th class="num">Drift ($/unit)</th><th>Status</th>
+        </tr></thead>
+        <tbody id="bomBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Lead-time matrix</h2><span>PO milestone tracking · delay cost = $250/day</span></div>
+    <div class="panel">
+      <table>
+        <thead><tr>
+          <th>PO</th><th>Vendor</th><th>Carrier</th><th class="num">Variance (days)</th>
+          <th class="num">Delay cost</th><th>Impact</th>
+        </tr></thead>
+        <tbody id="leadBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Commodity benchmark</h2><span>Spot price vs. 90-day average</span></div>
+    <div class="commodity-grid" id="commodityGrid"></div>
+  </section>
+
+  <footer id="footnote">
+    <strong style="color:var(--tx-2)">About this demo.</strong>
+    Owl Watch is a forensic procurement intelligence workbook — invoice &amp; freight auditing,
+    BOM drift tracking, vendor risk scoring, and freight lane benchmarking, all built on live Excel formulas.
+    Every figure on this page is fictional sample data generated to illustrate how the tool flags
+    variance, risk, and recoverable spend. The underlying engine is a working Excel model with linked
+    formulas across eight sheets, available as a companion download.
+    <br><br>
+    Design and build: Pedro B., Supply Chain &amp; Procurement.
+  </footer>
+
+</div>
+
+<script>
+const vendors = [
+  {name:"Meridian Steel Supply", spend:542174, events:0, drift:0.030, failures:0, tier:"WATCHLIST"},
+  {name:"Coastal Aluminum Works", spend:577748, events:6, drift:0.082, failures:3, tier:"HIGH"},
+  {name:"Apex Compressor Co.", spend:154191, events:1, drift:0.174, failures:4, tier:"HIGH"},
+  {name:"Sunbelt Sheet Metal", spend:77870, events:4, drift:0.086, failures:4, tier:"HIGH"},
+  {name:"Precision Copper Products", spend:597448, events:0, drift:0.153, failures:0, tier:"WATCHLIST"},
+  {name:"Blue Ridge Fasteners", spend:286054, events:4, drift:0.102, failures:2, tier:"HIGH"},
+];
+
+const lanes = [
+  {lane:"Atlanta, GA → Chicago, IL", perMile:3.12, overcharge:1207, risk:"WATCHLIST"},
+  {lane:"Atlanta, GA → Newark, NJ", perMile:3.30, overcharge:1670, risk:"WATCHLIST"},
+  {lane:"Louisville, KY → Atlanta, GA", perMile:2.84, overcharge:1426, risk:"WATCHLIST"},
+  {lane:"Atlanta, GA → Denver, CO", perMile:3.67, overcharge:1250, risk:"WATCHLIST"},
+  {lane:"Atlanta, GA → Phoenix, AZ", perMile:2.49, overcharge:1630, risk:"WATCHLIST"},
+  {lane:"Atlanta, GA → Charlotte, NC", perMile:2.90, overcharge:1120, risk:"WATCHLIST"},
+];
+
+const bom = [
+  {material:"6061 Aluminum Extrusion", vendor:"Coastal Aluminum Works", delivered:15.48+1.55-1.55, contract:14.0, drift:1.55, status:"COMPLIANT"},
+  {material:"R-448A Refrigerant", vendor:"Summit Refrigerant Supply", delivered:137.07, contract:129.31, drift:7.76, status:"COMPLIANT"},
+  {material:"Stainless Fasteners", vendor:"Blue Ridge Fasteners", delivered:134.98, contract:122.71, drift:12.27, status:"COMPLIANT"},
+  {material:"PVC Insulation Foam", vendor:"Summit Refrigerant Supply", delivered:90.33, contract:85.22, drift:5.11, status:"COMPLIANT"},
+  {material:"Compressor Motor Unit", vendor:"Precision Copper Products", delivered:159.12, contract:154.49, drift:4.63, status:"COMPLIANT"},
+  {material:"Evaporator Coil", vendor:"Vantage Electrical Components", delivered:137.39, contract:133.39, drift:4.00, status:"COMPLIANT"},
+];
+
+const leadtime = [
+  {po:"PO-48312", vendor:"Apex Compressor Co.", carrier:"Saia LTL", variance:2, cost:500, impact:"ON TIME"},
+  {po:"PO-48317", vendor:"Summit Refrigerant Supply", carrier:"XPO Logistics", variance:6, cost:1500, impact:"MODERATE DELAY"},
+  {po:"PO-48322", vendor:"Ironclad Components", carrier:"Old Dominion Freight", variance:15, cost:3750, impact:"LINE STOPPAGE RISK"},
+  {po:"PO-48310", vendor:"Meridian Steel Supply", carrier:"XPO Logistics", variance:-1, cost:0, impact:"ON TIME"},
+  {po:"PO-48314", vendor:"Sunbelt Sheet Metal", carrier:"Estes Express", variance:1, cost:0, impact:"ON TIME"},
+];
+
+const commodities = [
+  {name:"Diesel ($/gal)", spot:3.42, avg90:3.15, dir:"up"},
+  {name:"Steel ($/ton)", spot:785, avg90:810, dir:"down"},
+  {name:"Aluminum ($/lb)", spot:1.18, avg90:1.10, dir:"up"},
+  {name:"Copper ($/lb)", spot:4.35, avg90:4.02, dir:"up"},
+  {name:"Wheat ($/bu)", spot:6.10, avg90:6.40, dir:"down"},
+  {name:"Lithium ($/kg)", spot:13.20, avg90:11.50, dir:"up"},
+];
+
+const fmt = n => "$" + Math.round(n).toLocaleString("en-US");
+const fmt2 = n => "$" + n.toFixed(2);
+const pct = n => (n*100).toFixed(1) + "%";
+
+function tierClass(t){
+  if(t==="CRITICAL") return "critical";
+  if(t==="HIGH") return "high";
+  if(t==="WATCHLIST") return "watchlist";
+  return "compliant";
+}
+
+const totalSpend = vendors.reduce((a,v)=>a+v.spend,0) + 231485; // plus non-flagged ledger vendors
+const totalFreight = 6200;
+const totalFuel = 419;
+const recoverable = 22754;
+const avgLeadVar = 2.2;
+const bomDrift = bom.reduce((a,b)=>a+b.drift,0);
+const openApprovals = 3;
+
+const kpis = [
+  {label:"Total audited spend", value:fmt(totalSpend)},
+  {label:"Total freight spend", value:fmt(totalFreight)},
+  {label:"Fuel surcharge", value:fmt(totalFuel)},
+  {label:"Recoverable exposure", value:fmt(recoverable), cls:"amber"},
+  {label:"Avg lead-time variance", value:avgLeadVar.toFixed(1)+"d"},
+  {label:"BOM drift exposure", value:fmt2(bomDrift)},
+  {label:"Open approvals", value:openApprovals, cls:"amber"},
+];
+
+document.getElementById("kpiGrid").innerHTML = kpis.map(k=>`
+  <div class="kpi">
+    <div class="label">${k.label}</div>
+    <div class="value ${k.cls||""}">${k.value}</div>
+  </div>`).join("");
+
+document.getElementById("vendorBody").innerHTML = vendors
+  .sort((a,b)=> (b.drift - a.drift))
+  .slice(0,6)
+  .map(v=>`
+  <tr>
+    <td>${v.name}</td>
+    <td class="num">${fmt(v.spend)}</td>
+    <td class="num">${v.events}</td>
+    <td class="num">${pct(v.drift)}</td>
+    <td class="num">${v.failures}</td>
+    <td><span class="tag ${tierClass(v.tier)}">${v.tier}</span></td>
+  </tr>`).join("");
+
+document.getElementById("laneBody").innerHTML = lanes
+  .sort((a,b)=>b.overcharge - a.overcharge)
+  .slice(0,6)
+  .map(l=>`
+  <tr>
+    <td>${l.lane}</td>
+    <td class="num">${fmt2(l.perMile)}</td>
+    <td class="num">${fmt(l.overcharge)}</td>
+    <td><span class="tag ${tierClass(l.risk)}">${l.risk}</span></td>
+  </tr>`).join("");
+
+document.getElementById("bomBody").innerHTML = bom.map(b=>`
+  <tr>
+    <td>${b.material}</td>
+    <td>${b.vendor}</td>
+    <td class="num">${fmt2(b.delivered)}</td>
+    <td class="num">${fmt2(b.contract)}</td>
+    <td class="num">${fmt2(b.drift)}</td>
+    <td><span class="tag ${tierClass(b.status)}">${b.status}</span></td>
+  </tr>`).join("");
+
+document.getElementById("leadBody").innerHTML = leadtime.map(l=>`
+  <tr>
+    <td>${l.po}</td>
+    <td>${l.vendor}</td>
+    <td>${l.carrier}</td>
+    <td class="num">${l.variance}</td>
+    <td class="num">${fmt(l.cost)}</td>
+    <td><span class="tag ${l.impact==="LINE STOPPAGE RISK"?"critical":l.impact==="MODERATE DELAY"?"watchlist":"compliant"}">${l.impact}</span></td>
+  </tr>`).join("");
+
+document.getElementById("commodityGrid").innerHTML = commodities.map(c=>{
+  const delta = ((c.spot-c.avg90)/c.avg90*100);
+  const arrow = c.dir==="up" ? "▲" : c.dir==="down" ? "▼" : "—";
+  return `
+  <div class="commodity">
+    <div class="name">${c.name}</div>
+    <div class="price">${c.spot.toFixed(2)}</div>
+    <div class="delta ${c.dir==='up'?'up':c.dir==='down'?'down':'flat'}">${arrow} ${Math.abs(delta).toFixed(1)}% vs 90-day avg</div>
+  </div>`;
+}).join("");
+</script>
+</body>
+</html>
